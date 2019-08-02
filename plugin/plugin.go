@@ -51,7 +51,7 @@ func (p *plugin) Find(ctx context.Context, req *config.Request) (*drone.Config, 
 
 	// get the configuration file from the github
 	// repository for the build ref.
-	data, _, _, err := client.Repositories.GetContents(req.Repo.Namespace, req.Repo.Name, path, &github.RepositoryContentGetOptions{Ref: req.Build.After})
+	data, _, _, err := client.Repositories.GetContents(ctx, req.Repo.Namespace, req.Repo.Name, path, &github.RepositoryContentGetOptions{Ref: req.Build.After})
 	if err == nil && data != nil {
 		// get the file contents.
 		content, err := data.GetContent()
@@ -66,7 +66,7 @@ func (p *plugin) Find(ctx context.Context, req *config.Request) (*drone.Config, 
 	// if the configuration file does not exist,
 	// we should fallback to a global configuration
 	// file stored in a central repository.
-	data, _, _, err = client.Repositories.GetContents(p.namespace, p.name, p.path, &github.RepositoryContentGetOptions{Ref: p.branch})
+	data, _, _, err = client.Repositories.GetContents(ctx, p.namespace, p.name, p.path, &github.RepositoryContentGetOptions{Ref: p.branch})
 	if err != nil {
 		return nil, err
 	}
